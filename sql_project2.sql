@@ -1,28 +1,44 @@
+
+-- Retail sales SQL project 
+
 USE sql_project_p1;
 
-SELECT * FROM retail_sales
+-- Preview the first 10 rows from retail_sales 
+SELECT * 
+FROM retail_sales
 LIMIT 10;
 
-SELECT COUNT(*) FROM retail_sales
+-- Count total rows before cleaning 
+SELECT 
+	COUNT(*) 
+FROM retail_sales
 LIMIT 10;
 
-SELECT * FROM retail_sales
+-- Checking if any transation IDs are missing 
+SELECT * 
+FROM retail_sales
 WHERE transactions_id IS NULL; 
 
-SELECT * FROM retail_sales LIMIT 10;
+-- Check a specific transaction for validation 
+SELECT * 
+FROM retail_sales 
+WHERE transactions_id = 679;
 
-SELECT * FROM retail_sales WHERE transactions_id = 679;
-SELECT COUNT(*) AS likely_missing_numeric
+-- Identify rows where important numeric values are stored as 0 
+SELECT 
+	COUNT(*) AS likely_missing_numeric
 FROM retail_sales
 WHERE quantity = 0
   AND price_per_unit = 0
   AND cogs = 0
   AND total_sale = 0;
 
+-- Disable safe updated mode so cleaning updates/deletes can run
 SET SQL_SAFE_UPDATES = 0;
 
-
-SELECT * FROM retail_sales;
+-- Replace invalid zero values with NULL 
+SELECT * 
+FROM retail_sales;
 UPDATE retail_sales
 SET
   quantity = NULL,
@@ -33,29 +49,35 @@ WHERE quantity = 0
   AND price_per_unit = 0
   AND cogs = 0
   AND total_sale = 0;
-  
-SELECT COUNT(*) AS zero_rows
+
+-- Confirm there are no more rows with all numeric values as 0 
+SELECT 
+	COUNT(*) AS zero_rows
 FROM retail_sales
 WHERE quantity = 0
 AND price_per_unit = 0
 AND cogs = 0
 AND total_sale = 0;
 
-SELECT COUNT(*) AS null_rows
+-- Count rows where all numeric fields are NULL 
+SELECT 
+	COUNT(*) AS null_rows
 FROM retail_sales
 WHERE quantity IS NULL
 AND price_per_unit IS NULL
 AND cogs IS NULL
 AND total_sale IS NULL;
 
-
-SELECT COUNT(*) AS null_rows
+-- Count rows with any missing numreic value 
+SELECT 
+	COUNT(*) AS null_rows
 FROM retail_sales
 WHERE quantity IS NULL
 OR price_per_unit IS NULL
 OR cogs IS NULL
 OR total_sale IS NULL;
 
+-- Review rows with missing values before deleting them 
 SELECT *
 FROM retail_sales
 WHERE transactions_id IS NULL
@@ -71,8 +93,9 @@ WHERE transactions_id IS NULL
    OR total_sale IS NULL
 LIMIT 50;
 
-
-DELETE FROM retail_sales 
+-- Delete rows with missing values from columns 
+DELETE 
+FROM retail_sales 
 WHERE transactions_id IS NULL
    OR sale_date IS NULL
    OR sale_time IS NULL
